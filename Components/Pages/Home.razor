@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using EncriptionApp.Service
 @using CommunityToolkit.Maui.Storage;
 @inject EncriptionService EncriptionService
@@ -447,6 +447,7 @@
         {
             progressPercent = e.ProgressPercentage;
             currentStatus = e.UserState?.ToString();
+            
             if (currentStatus == "acess")
             {
                 IsCanceld = true;
@@ -465,7 +466,22 @@
             isProcessing = false;
             showProgress = false;
             string _SkipedFiles = string.Empty;
-            if (IsCanceld)
+            if (EncriptionService.IsWorngPassword)
+            {
+                EncriptionService.IsWorngPassword = false; 
+                IsCanceld = false;
+                processFinished = true;
+                currentStatus = "";
+                outputPath = string.Empty;
+                SkipedFiles.Clear();
+                currentColor = red;
+                IsCanceld = false;
+                finishedMessage = Lang["WorngPassword"];
+                InvokeAsync(StateHasChanged);
+                return;
+
+            }
+             else if (IsCanceld)
             {
                 processFinished = true;
                 currentStatus = "";
@@ -485,7 +501,7 @@
                     _SkipedFiles += item + "\t";
                 }
                 currentColor = green;
-                finishedMessage = isEncryption ? @Lang["SuccessEncrypt"]: @Lang["SuccessDecrypt"];
+                finishedMessage = isEncryption ? @Lang["SuccessEncrypt"] + Lang["SkipedFiles"] + $@" {SkipedFiles.Count}" : @Lang["SuccessDecrypt"] + Lang["SkipedFiles"] + $@" {SkipedFiles.Count}";
                 SkipedFiles.Clear();
                 processFinished = true;
                 currentStatus = "";
@@ -547,7 +563,7 @@
         try
         {
             var result = await FolderPicker.Default.PickAsync();
-            if (result != null)
+            if (result != null && result.Folder != null)
             {
                 selectedPath = result.Folder.Path;
                 isFolder = true;
