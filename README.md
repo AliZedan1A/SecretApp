@@ -1,4 +1,5 @@
 # EncriptionApp
+![image](https://github.com/user-attachments/assets/93661365-ced0-4203-987e-532493e4d796)
 
 EncriptionApp is a simple application for encrypting and decrypting files and folders using secure AES encryption. Built with .NET MAUI and featuring a Blazor-based user interface, the app provides an integrated user experience with support for both Arabic and English languages.
 
