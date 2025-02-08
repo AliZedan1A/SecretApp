@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Security.Cryptography;
 
 namespace EncriptionApp.Service
@@ -8,6 +8,7 @@ namespace EncriptionApp.Service
         public event ProgressChangedEventHandler ProgressChanged;
         public event RunWorkerCompletedEventHandler RunWorkerCompleted;
         public bool iscancel = false;
+        public bool IsWorngPassword = false;
         public EncriptionService()
         {
         }
@@ -156,8 +157,14 @@ namespace EncriptionApp.Service
                     processed++;
                     worker.ReportProgress((int)((processed / (double)totalFiles) * 100), $"dycript file :  {System.IO.Path.GetFileName(file)}");
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    if(ex.Message == "Padding is invalid and cannot be removed.")
+                    {
+                        iscancel = true;
+                        IsWorngPassword = true;
+                        return;
+                    }
                     processed++;
                     worker.ReportProgress((int)((processed / (double)totalFiles) * 100), $"file skiped : {System.IO.Path.GetFileName(file)}");
                 }
@@ -177,10 +184,13 @@ namespace EncriptionApp.Service
             using (Aes aes = Aes.Create())
             {
                 aes.GenerateIV();
-                using (var keyGenerator = new Rfc2898DeriveBytes(password, aes.IV, 10000))
-                {
-                    aes.Key = keyGenerator.GetBytes(aes.KeySize / 8);
-                }
+               
+                    using (var keyGenerator = new Rfc2898DeriveBytes(password, aes.IV, 10000))
+                    {
+                        aes.Key = keyGenerator.GetBytes(aes.KeySize / 8);
+                    }
+             
+               
                 using (System.IO.FileStream outputStream = new System.IO.FileStream(outputFile, System.IO.FileMode.Create))
                 {
                     outputStream.Write(aes.IV, 0, aes.IV.Length);
@@ -206,10 +216,20 @@ namespace EncriptionApp.Service
                 using (System.IO.FileStream inputStream = new System.IO.FileStream(inputFile, System.IO.FileMode.Open))
                 {
                     inputStream.Read(iv, 0, iv.Length);
-                    using (var keyGenerator = new Rfc2898DeriveBytes(password, iv, 10000))
-                    {
-                        aes.Key = keyGenerator.GetBytes(aes.KeySize / 8);
-                    }
+                    //try
+                    //{
+                        using (var keyGenerator = new Rfc2898DeriveBytes(password, iv, 10000))
+                        {
+                            aes.Key = keyGenerator.GetBytes(aes.KeySize / 8);
+                        }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    iscancel = true;
+                    //    IsWorngPassword = true;
+                    //    return;
+                    //}
+
                     aes.IV = iv;
                     using (CryptoStream cryptoStream = new CryptoStream(inputStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
                     using (System.IO.FileStream outputStream = new System.IO.FileStream(outputFile, System.IO.FileMode.Create))
