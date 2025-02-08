@@ -1,68 +1,75 @@
 # EncriptionApp
 
-EncriptionApp هو تطبيق بسيط لتشفير وفك تشفير الملفات والمجلدات باستخدام تقنيات التشفير الآمن (AES). تم بناء التطبيق باستخدام .NET MAUI مع دعم لواجهة المستخدم المبنية بـ Blazor، ويقدم تجربة مستخدم متكاملة مع دعم للغتين العربية والإنجليزية.
+EncriptionApp is a simple application for encrypting and decrypting files and folders using secure AES encryption. Built with .NET MAUI and featuring a Blazor-based user interface, the app provides an integrated user experience with support for both Arabic and English languages.
 
-## الميزات
+## Features
 
-- **تشفير وفك تشفير الملفات والمجلدات**  
-  يقوم التطبيق بتشفير الملفات بإضافة لاحقة `.encrypted` أو إنشاء مجلد مشفر للمجلدات، وكذلك فك تشفيرها باستخدام نفس كلمة المرور.
+- **File and Folder Encryption/Decryption**  
+  The application encrypts files by appending a `.encrypted` extension or encrypts entire folders by creating a new encrypted directory, and it similarly decrypts them using the same password.
 
-- **تشفير آمن باستخدام AES**  
-  يستخدم التطبيق مكتبة `System.Security.Cryptography` لتشفير البيانات باستخدام خوارزمية AES، مع توليد مفتاح من كلمة المرور باستخدام `Rfc2898DeriveBytes`.
+- **Secure AES Encryption**  
+  It leverages the `System.Security.Cryptography` library to encrypt data using the AES algorithm. The encryption key is derived from the user’s password via `Rfc2898DeriveBytes`.
 
-- **معالجة غير متزامنة مع تحديثات تقدم العملية**  
-  يتم تنفيذ عمليات التشفير وفك التشفير في خلفية باستخدام `BackgroundWorker` مع تقارير تقدم تُعرض للمستخدم عبر شريط تقدم.
+- **Asynchronous Processing with Progress Updates**  
+  Encryption and decryption operations run in the background using `BackgroundWorker`, with real-time progress updates displayed through a progress bar.
 
-- **دعم تحديد الملفات والمجلدات**  
-  يمكن للمستخدم اختيار ملف أو مجلد من الجهاز باستخدام `CommunityToolkit.Maui.Storage`.
+- **File and Folder Selection**  
+  Users can select a file or folder from their device using the `CommunityToolkit.Maui.Storage` library.
 
-- **توليد كلمة مرور عشوائية**  
-  إمكانية توليد كلمة مرور عشوائية تلقائياً ونسخها إلى الحافظة لتسهيل عملية التشفير.
+- **Random Password Generation**  
+  The app provides a feature to automatically generate a random password, which is also copied to the clipboard for convenience.
 
-- **واجهة مستخدم متعددة اللغات**  
-  يوفر التطبيق واجهة مستخدم قابلة للتبديل بين العربية والإنجليزية باستخدام خدمة الترجمة (LocalizationService).
+- **Multi-language User Interface**  
+  The application supports switching between Arabic and English through a localization service (LocalizationService).
 
-## بنية المشروع
+## Project Structure
 
-يحتوي المشروع على مكونين رئيسيين:
+The project consists of two main components:
 
-### 1. صفحة الواجهة (Main Page)
+### 1. Main Page (User Interface)
 
-تتضمن الصفحة الرئيسية للمشروع العناصر التالية:
-- **محدد اللغة**: قائمة للتبديل بين العربية والإنجليزية.
-- **مجموعة التبديل بين العمليات**: أزرار لاختيار التشفير أو فك التشفير.
-- **اختيار الملف/المجلد**: حقل عرض للمسار مع أزرار لاختيار ملف أو مجلد.
-- **حقول إدخال كلمة المرور**: حقل لإدخال كلمة المرور، وحقل لتأكيد كلمة المرور عند التشفير.
-- **توليد كلمة مرور عشوائية**: زر لتوليد كلمة مرور عشوائية تُنسخ تلقائياً إلى الحافظة.
-- **شريط تقدم وإشعارات**: عرض تقدم العملية ورسائل الحالة والتنبيهات.
+The main page includes the following elements:
+- **Language Selector:**  
+  A toggle allowing users to switch between Arabic and English.
+- **Operation Toggle Group:**  
+  Buttons to choose between encryption and decryption.
+- **File/Folder Selection:**  
+  An input field displaying the selected path, along with buttons to pick a file or folder.
+- **Password Input Fields:**  
+  Fields for entering the password and, when encrypting, confirming it.
+- **Random Password Generation:**  
+  A button to generate a random password that is automatically copied to the clipboard.
+- **Progress Bar and Notifications:**  
+  Displays the progress of the operation, status messages, and alerts.
 
-يحتوي الكود على تصميم CSS متكامل يُحسّن تجربة المستخدم مع تأثيرات الحركة والأنيميشن.
+The page also includes comprehensive CSS styling to enhance user experience with animations and visual effects.
 
-### 2. خدمة التشفير (EncriptionService)
+### 2. Encryption Service (EncriptionService)
 
-تقوم خدمة `EncriptionService` بما يلي:
-- **تشفير ملف أو مجلد**  
-  - عند تشفير ملف مفرد، يتم إنشاء ملف جديد بنهاية `.encrypted`.
-  - عند تشفير مجلد، يتم إنشاء مجلد جديد (ينتهي بـ `_enc`) يحتوي على الملفات المشفرة بنفس البنية.
-- **فك تشفير ملف أو مجلد**  
-  - عند فك تشفير ملف، يتم إزالة اللاحقة `.encrypted` لإعادة الملف لحالته الأصلية.
-  - عند فك تشفير مجلد، يتم استعادة المجلد الأصلي بناءً على اسم المجلد المشفر.
-- **تنفيذ العمليات في خلفية التطبيق**  
-  تستخدم الخدمة `BackgroundWorker` لتنفيذ العمليات دون تعليق واجهة المستخدم، مع إرسال تقارير تقدم لكل عملية.
-- **التعامل مع الأخطاء والإلغاءات**  
-  في حالة وجود أخطاء (مثل كلمة مرور غير صحيحة أو مشاكل وصول) يتم إعلام المستخدم وإيقاف العملية عند الضرورة.
+The `EncriptionService` is responsible for the core functionality of the app:
+- **File or Folder Encryption:**  
+  - When encrypting a single file, it creates a new file with a `.encrypted` extension.
+  - When encrypting a folder, it creates a new directory (with a `_enc` suffix) that maintains the original folder structure.
+- **File or Folder Decryption:**  
+  - For file decryption, the `.encrypted` extension is removed to restore the original file.
+  - For folder decryption, the original folder is restored based on the encrypted folder’s name.
+- **Background Processing:**  
+  The service uses `BackgroundWorker` to perform operations without freezing the user interface, while providing continuous progress updates.
+- **Error Handling and Cancellation:**  
+  If errors occur (such as an incorrect password or access issues), the operation is halted and the user is notified accordingly.
 
-## كيفية الاستخدام
+## How to Use
 
-### المتطلبات الأساسية
+### Prerequisites
 
-- **.NET 6 أو أحدث**  
-- **MAUI Workload**: التأكد من تثبيت بيئة تطوير .NET MAUI (يمكن الاطلاع على [توثيق MAUI](https://learn.microsoft.com/en-us/dotnet/maui/overview)).
-- **Visual Studio 2022** (أو إصدار أحدث) مع دعم MAUI.
+- **.NET 6 or Later**
+- **MAUI Workload:**  
+  Ensure you have the .NET MAUI development environment set up. For more details, refer to the [MAUI Documentation](https://learn.microsoft.com/en-us/dotnet/maui/overview).
+- **Visual Studio 2022** (or later) with MAUI support.
 
-### خطوات التشغيل
+### Getting Started
 
-1. **استنساخ المشروع من GitHub**:
+1. **Clone the Repository from GitHub:**
 
    ```bash
    git clone https://github.com/AliZedan1A/SecretApp.git
