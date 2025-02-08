@@ -64,9 +64,7 @@ The `EncriptionService` is responsible for the core functionality of the app:
 ### Prerequisites
 
 
-- **.NET 9 or Later**
-- **MAUI Workload:**  
-  Ensure you have the .NET MAUI development environment set up. For more details, refer to the [MAUI Documentation](https://learn.microsoft.com/en-us/dotnet/maui/overview).
+- **.NET 9 or Later**  
 - **Visual Studio 2022** (or later) with MAUI support.
 
 ### Getting Started
