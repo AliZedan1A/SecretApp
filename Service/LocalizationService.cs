@@ -1,4 +1,4 @@
-﻿public class LocalizationService
+public class LocalizationService
 { 
     public event Action OnLanguageChanged;
 
@@ -31,8 +31,10 @@
                 {"EncryptionPros", "جار التشفير" },
                 {"DecryptionPros", "جار فك التشفير" },
                 {"PlaceHolderPath", "مسار الملف/المجلد" },
-                {"SkipedFiles", "الملفات التي لم يتم تشفيرها لعدم وجود صلاحية " },
-                {"noacess","لا يوجد صلاحية الوصول للمجلد" }
+                {"SkipedFiles", "وعدد الملفات التي تم تخطيها :" },
+                {"noacess","لا يوجد صلاحية الوصول للمجلد" },
+                {"WorngPassword","خطأ في كلمة المرور" }
+
 
 
             }
@@ -62,8 +64,9 @@
                 {"EncryptionPros", "Encryption  in progress" },
                 {"DecryptionPros", "Decryption in progress" },
                 {"PlaceHolderPath", "Path of the file or folder" },
-                {"SkipedFiles", "Files that are not encrypted due to lack of validity " },
-                {"noacess","There is no access to the folder" }
+                {"SkipedFiles", "and the count of file Skiped : " },
+                {"noacess","There is no access to the folder" },
+                {"WorngPassword","Password Incorect" }
             }
         }
     };
