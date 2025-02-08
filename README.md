@@ -65,5 +65,5 @@ EncriptionApp هو تطبيق بسيط لتشفير وفك تشفير الملف
 1. **استنساخ المشروع من GitHub**:
 
    ```bash
-   git clone https://github.com/yourusername/EncriptionApp.git
+   git clone https://github.com/AliZedan1A/SecretApp.git
    cd EncriptionApp
